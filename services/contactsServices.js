@@ -1,8 +1,8 @@
-const fs = require("fs/promises");
-const path = require("path");
-const { randomUUID } = require("crypto");
+import fs from "fs/promises";
+import path from "path";
+import { randomUUID } from "crypto";
 
-const contactsPath = path.join(__dirname, "db", "contacts.json");
+const contactsPath = path.resolve("db", "contacts.json");
 
 async function listContacts() {
   try {
@@ -50,4 +50,4 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-module.exports = { listContacts, getContactById, removeContact, addContact };
+export default { listContacts, getContactById, removeContact, addContact };
