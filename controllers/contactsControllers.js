@@ -19,7 +19,26 @@ const getById = async (req, res) => {
   res.json(result);
 };
 
+const add = async (req, res) => {
+  const result = await contactsServices.addContact(req.body);
+
+  res.status(201).json(result);
+};
+
+const updateById = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsServices.updateContactById(id, req.body);
+
+  if (!result) {
+    throw HttpError(404);
+  }
+
+  res.json(result);
+};
+
 export default {
   getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
+  add: ctrlWrapper(add),
+  updateById: ctrlWrapper(updateById),
 };
