@@ -21,6 +21,6 @@ contactsRouter.put(
   contactsControllers.updateById
 );
 
-contactsRouter.delete("/:id", (req, res) => {});
+contactsRouter.delete("/:id", contactsControllers.removeById);
 
 export default contactsRouter;
