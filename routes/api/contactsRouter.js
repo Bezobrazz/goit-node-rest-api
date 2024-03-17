@@ -9,15 +9,18 @@ import {
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", contactsControllers.getAll);
+
 contactsRouter.get("/:id", contactsControllers.getById);
+
 contactsRouter.post(
   "/",
   validateBody(createContactSchema),
   contactsControllers.add
 );
+
 contactsRouter.put(
   "/:id",
-  validateBody(createContactSchema),
+  validateBody(updateContactSchema),
   contactsControllers.updateById
 );
 
