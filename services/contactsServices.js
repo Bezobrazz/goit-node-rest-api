@@ -29,10 +29,18 @@ async function updateContactById(id, body) {
     return null;
   }
 
-  contacts[index] = { ...contacts[index], ...body };
+  const updatedContact = { ...contacts[index] };
+
+  Object.keys(body).forEach((key) => {
+    updatedContact[key] = body[key];
+  });
+
+  contacts[index] = updatedContact;
 
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2), "utf-8");
-  return contacts[index];
+  console.log(updatedContact);
+
+  return updatedContact;
 }
 
 async function removeContact(contactId) {
