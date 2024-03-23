@@ -6,14 +6,9 @@ import "dotenv/config";
 
 import contactsRouter from "./routes/api/contactsRouter.js";
 
+const { DB_HOST, PORT = 3000 } = process.env;
+
 const app = express();
-
-const { DB_HOST } = process.env;
-
-mongoose
-  .connect(DB_HOST)
-  .then(() => console.log("Database connection successful"))
-  .catch((error) => console.log(error.message));
 
 app.use(morgan("tiny"));
 app.use(cors());
@@ -30,6 +25,14 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
-});
+mongoose
+  .connect(DB_HOST)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Database connection successful");
+    });
+  })
+  .catch((error) => {
+    console.log(error.message);
+    process.exit(1);
+  });
