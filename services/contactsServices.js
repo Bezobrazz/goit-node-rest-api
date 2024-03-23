@@ -29,19 +29,12 @@ async function updateContactById(id, data) {
 }
 
 async function removeContact(contactId) {
-  const contacts = await listContacts();
-  const removedContact = contacts.find((contact) => contact.id === contactId);
-  if (!removedContact) return null;
-
-  const updatedContacts = contacts.filter(
-    (contact) => contact.id !== contactId
-  );
-  await fs.writeFile(
-    contactsPath,
-    JSON.stringify(updatedContacts, null, 2),
-    "utf-8"
-  );
-  return removedContact;
+  try {
+    const deletedContact = await Contact.findByIdAndDelete(contactId);
+    return deletedContact;
+  } catch (error) {
+    return null;
+  }
 }
 
 export default {

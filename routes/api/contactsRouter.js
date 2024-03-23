@@ -4,6 +4,7 @@ import validateBody from "../../decorators/validateBody.js";
 import {
   createContactSchema,
   updateContactSchema,
+  updateContactStatusSchema,
 } from "../../schemas/contactsSchemas.js";
 
 const contactsRouter = express.Router();
