@@ -17,4 +17,4 @@ const contactSchema = new Schema({
   },
 });
 
-export const Book = model("book", contactSchema);
+export const Contact = model("contact", contactSchema);

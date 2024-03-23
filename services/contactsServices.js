@@ -1,24 +1,17 @@
-import fs from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
-
-const contactsPath = path.resolve("db", "contacts.json");
+import { Contact } from "../models/Contact.js";
 
 async function listContacts() {
-  try {
-    const data = await fs.readFile(contactsPath, "utf-8");
-    return JSON.parse(data);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
+  const data = await Contact.find({});
+  return data;
 }
 
 async function getContactById(contactId) {
-  const contacts = await listContacts();
-  return contacts.find((contact) => contact.id === contactId) || null;
+  try {
+    const contact = await Contact.findById(contactId);
+    return contact;
+  } catch (error) {
+    return null;
+  }
 }
 
 async function updateContactById(id, body) {
