@@ -19,26 +19,13 @@ async function addContact(body) {
   return newContact;
 }
 
-async function updateContactById(id, body) {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((item) => item.id === id);
-
-  if (index === -1) {
+async function updateContactById(id, data) {
+  try {
+    const contact = await Contact.findByIdAndUpdate(id, data, { new: true });
+    return contact;
+  } catch (error) {
     return null;
   }
-
-  const updatedContact = { ...contacts[index] };
-
-  Object.keys(body).forEach((key) => {
-    updatedContact[key] = body[key];
-  });
-
-  contacts[index] = updatedContact;
-
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2), "utf-8");
-  console.log(updatedContact);
-
-  return updatedContact;
 }
 
 async function removeContact(contactId) {
