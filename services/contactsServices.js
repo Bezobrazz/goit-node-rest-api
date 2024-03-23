@@ -14,6 +14,11 @@ async function getContactById(contactId) {
   }
 }
 
+async function addContact(body) {
+  const newContact = await Contact.create(body);
+  return newContact;
+}
+
 async function updateContactById(id, body) {
   const contacts = await listContacts();
   const index = contacts.findIndex((item) => item.id === id);
@@ -50,17 +55,6 @@ async function removeContact(contactId) {
     "utf-8"
   );
   return removedContact;
-}
-
-async function addContact(data) {
-  const contacts = await listContacts();
-  const newContact = {
-    id: randomUUID(),
-    ...data,
-  };
-  contacts.push(newContact);
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2), "utf-8");
-  return newContact;
 }
 
 export default {
