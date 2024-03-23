@@ -47,10 +47,28 @@ const removeById = async (req, res) => {
   res.json(result);
 };
 
+const updateStatusContact = async (req, res, next) => {
+  const data = await contactsServices.updateContactById(
+    req.params.id,
+    req.body
+  );
+  if (!data) {
+    throw HttpError(404);
+  }
+  res.json({
+    status: "success",
+    code: "200",
+    data: {
+      result: data,
+    },
+  });
+};
+
 export default {
   getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
   updateById: ctrlWrapper(updateById),
   removeById: ctrlWrapper(removeById),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
