@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { User } from "../models/User.js";
 
 export async function findUserServise(data) {
@@ -8,4 +9,12 @@ export async function findUserServise(data) {
 export async function createUserServise(body) {
   const newUser = await User.create(body);
   return newUser;
+}
+
+export async function updateUserServise(id, data) {
+  return User.findByIdAndUpdate(id, data, { new: true });
+}
+
+export async function validatePassword(password, hashPassword) {
+  return bcrypt.compare(password, hashPassword);
 }

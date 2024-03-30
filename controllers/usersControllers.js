@@ -1,11 +1,16 @@
-import bcript from "bcrypt";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 import {
   createUserServise,
   findUserServise,
+  updateUserServise,
+  validatePassword,
 } from "../services/usersServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
+
+const { JWT_SECRET } = process.env;
 
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -15,11 +20,11 @@ const registerUser = async (req, res, next) => {
     throw HttpError(409, "email in use");
   }
 
-  const hashPpassword = await bcript.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10);
 
   const newUser = await createUserServise({
     ...req.body,
-    password: hashPpassword,
+    password: hashPassword,
   });
 
   res.status(201).json({
@@ -28,6 +33,35 @@ const registerUser = async (req, res, next) => {
   });
 };
 
+export const loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await findUserServise({ email });
+
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+  const comparePassword = await validatePassword(password, user.password);
+
+  if (!comparePassword) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  // const { _id: id } = user;
+  // const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: "24h" });
+  // await updateUserServise({ _id: id }, { token });
+
+  const token = "jouyqopiuhp11oi4;1j;lj1l;k;1p014;o;2o2i";
+
+  res.json({
+    token,
+    // user: {
+    //   email: user.email,
+    //   subscription: user.subscription,
+    // },
+  });
+};
+
 export default {
   registerUser: ctrlWrapper(registerUser),
+  loginUser: ctrlWrapper(loginUser),
 };
