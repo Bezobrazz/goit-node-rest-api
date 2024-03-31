@@ -34,7 +34,7 @@ const registerUser = async (req, res, next) => {
   });
 };
 
-export const loginUser = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await findUserServise({ email });
 
@@ -60,7 +60,17 @@ export const loginUser = async (req, res, next) => {
   });
 };
 
+const getCurrent = async (req, res, next) => {
+  const { email, subscription } = req.user;
+
+  res.json({
+    email,
+    subscription,
+  });
+};
+
 export default {
   registerUser: ctrlWrapper(registerUser),
   loginUser: ctrlWrapper(loginUser),
+  getCurrent: ctrlWrapper(getCurrent),
 };

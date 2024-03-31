@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { HttpError } from "../helpers/HttpError.js";
-import { findUserServise } from "../services/usersServises.js";
+import HttpError from "../helpers/HttpError.js";
+import { findUserServise } from "../services/usersServices.js";
 const { JWT_SECRET } = process.env;
 
 export const authenticate = async (req, _, next) => {

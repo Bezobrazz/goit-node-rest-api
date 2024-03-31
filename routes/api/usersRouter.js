@@ -5,6 +5,7 @@ import {
   loginUserShema,
 } from "../../schemas/usersSchemas.js";
 import usersControllers from "../../controllers/usersControllers.js";
+import { authenticate } from "../../middlevares/authenticate.js";
 
 const usersRouter = express.Router();
 
@@ -19,5 +20,7 @@ usersRouter.post(
   validateBody(loginUserShema),
   usersControllers.loginUser
 );
+
+usersRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 export default usersRouter;
