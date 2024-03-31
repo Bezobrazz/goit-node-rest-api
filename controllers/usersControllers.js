@@ -53,10 +53,6 @@ const loginUser = async (req, res, next) => {
 
   res.json({
     token,
-    // user: {
-    //   email: user.email,
-    //   subscription: user.subscription,
-    // },
   });
 };
 
