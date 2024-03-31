@@ -23,4 +23,6 @@ usersRouter.post(
 
 usersRouter.get("/current", authenticate, usersControllers.getCurrent);
 
+usersRouter.post("/logout", authenticate, usersControllers.logoutUser);
+
 export default usersRouter;

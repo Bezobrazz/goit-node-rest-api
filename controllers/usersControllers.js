@@ -69,8 +69,16 @@ const getCurrent = async (req, res, next) => {
   });
 };
 
+const logoutUser = async (req, res, next) => {
+  const { _id: id } = req.user;
+  updateUserServise(id, { token: null });
+
+  res.status(204).json({ message: "Logout success" });
+};
+
 export default {
   registerUser: ctrlWrapper(registerUser),
   loginUser: ctrlWrapper(loginUser),
   getCurrent: ctrlWrapper(getCurrent),
+  logoutUser: ctrlWrapper(logoutUser),
 };
