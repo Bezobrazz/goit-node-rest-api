@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 import bcrypt from "bcrypt";
 
 import {
@@ -46,11 +47,9 @@ export const loginUser = async (req, res, next) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  // const { _id: id } = user;
-  // const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: "24h" });
-  // await updateUserServise({ _id: id }, { token });
-
-  const token = "jouyqopiuhp11oi4;1j;lj1l;k;1p014;o;2o2i";
+  const { _id: id } = user;
+  const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: "24h" });
+  await updateUserServise({ _id: id }, { token });
 
   res.json({
     token,
