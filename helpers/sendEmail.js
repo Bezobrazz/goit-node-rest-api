@@ -7,14 +7,14 @@ const nodemailerConfig = {
   port: 465,
   secure: true,
   auth: {
-    user: "pafos_popaz@meta.ua",
+    user: "testforit@meta.ua",
     pass: META_PASSWORD,
   },
 };
 const transport = nodemailer.createTransport(nodemailerConfig);
 
 export const sendEmail = async (data) => {
-  const email = { ...data, from: "pafos_popaz@meta.ua" };
+  const email = { ...data, from: "testforit@meta.ua" };
 
   await transport.sendMail(email);
 };
