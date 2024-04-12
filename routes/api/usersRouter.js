@@ -6,6 +6,7 @@ import {
 } from "../../schemas/usersSchemas.js";
 import usersControllers from "../../controllers/usersControllers.js";
 import { authenticate } from "../../middlevares/authenticate.js";
+import { upload } from "../../middlevares/upload.js";
 
 const usersRouter = express.Router();
 
@@ -24,5 +25,12 @@ usersRouter.post(
 usersRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 usersRouter.post("/logout", authenticate, usersControllers.logoutUser);
+
+usersRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  usersControllers.updateAvatar
+);
 
 export default usersRouter;
