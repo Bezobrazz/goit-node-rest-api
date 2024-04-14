@@ -16,6 +16,7 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import Jimp from "jimp";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { sendEmail } from "../helpers/sendEmail.js";
 
 const { JWT_SECRET, BASE_URL } = process.env;
 
@@ -63,6 +64,29 @@ const verifyEmail = async (req, res) => {
   await updateUserServise(user._id, { verify: true, verificationToken: null });
 
   res.json({ message: "Verification successful" });
+};
+
+const resendVerifyEmail = async (req, res) => {
+  const { email } = req.body;
+  const user = await findUserServise({ email });
+
+  if (!user) {
+    throw HttpError(401, "User not found");
+  }
+
+  if (user.verify) {
+    throw HttpError(400, "Verification has already been passed");
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href='${BASE_URL}/api/users/verify/${user.verificationToken}'>Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.json({ message: "Verify email send success" });
 };
 
 const loginUser = async (req, res, next) => {
@@ -140,4 +164,5 @@ export default {
   logoutUser: ctrlWrapper(logoutUser),
   updateAvatar: ctrlWrapper(updateAvatar),
   verifyEmail: ctrlWrapper(verifyEmail),
+  resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
 };

@@ -3,6 +3,7 @@ import validateBody from "../../decorators/validateBody.js";
 import {
   registerUserSchema,
   loginUserShema,
+  emailSchema,
 } from "../../schemas/usersSchemas.js";
 import usersControllers from "../../controllers/usersControllers.js";
 import { authenticate } from "../../middlevares/authenticate.js";
@@ -34,5 +35,11 @@ usersRouter.patch(
 );
 
 usersRouter.get("/verify/:verificationToken", usersControllers.verifyEmail);
+
+usersRouter.post(
+  "/verify",
+  validateBody(emailSchema),
+  usersControllers.resendVerifyEmail
+);
 
 export default usersRouter;
