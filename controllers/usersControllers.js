@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import bcrypt from "bcrypt";
 import gravatar from "gravatar";
+import { randomUUID } from "crypto";
 
 import {
   createUserServise,
@@ -16,7 +17,7 @@ import Jimp from "jimp";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, BASE_URL } = process.env;
 
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -28,17 +29,40 @@ const registerUser = async (req, res, next) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
+  const verificationToken = randomUUID();
 
   const newUser = await createUserServise({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    verificationToken,
   });
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href='${BASE_URL}/api/users/verify/${newUser.verificationToken}'>Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
 
   res.status(201).json({
     email: newUser.email,
     subscription: newUser.subscription,
   });
+};
+
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await findUserServise({ verificationToken });
+
+  if (!user) {
+    throw HttpError(401, "User not found");
+  }
+
+  await updateUserServise(user._id, { verify: true, verificationToken: null });
+
+  res.json({ message: "Verification successful" });
 };
 
 const loginUser = async (req, res, next) => {
@@ -47,6 +71,9 @@ const loginUser = async (req, res, next) => {
 
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
+  }
+  if (!user.verify) {
+    throw HttpError(403, "Email not verify");
   }
   const comparePassword = await validatePassword(password, user.password);
 
@@ -112,4 +139,5 @@ export default {
   getCurrent: ctrlWrapper(getCurrent),
   logoutUser: ctrlWrapper(logoutUser),
   updateAvatar: ctrlWrapper(updateAvatar),
+  verifyEmail: ctrlWrapper(verifyEmail),
 };
