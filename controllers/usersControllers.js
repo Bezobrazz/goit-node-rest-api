@@ -19,7 +19,7 @@ import { fileURLToPath } from "url";
 import { sendEmail } from "../helpers/sendEmail.js";
 
 const { JWT_SECRET, BASE_URL } = process.env;
-
+console.log(BASE_URL);
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
 
